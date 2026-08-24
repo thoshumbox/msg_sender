@@ -1,65 +1,81 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>send a message</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>send msg ig</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-  <main class="container">
+  <main class="app">
+    <section class="card">
 
-    <h1>send a message</h1>
+      <div class="header">
+        <div class="logo">w</div>
 
-    <p class="description">
-      enter your name and message belo
-    </p>
-
-    <form id="messageform">
-
-      <div class="field">
-        <label for="name">name</label>
-
-        <input
-          id="name"
-          type="text"
-          maxlength="100"
-          placeholder="enter your name"
-          autocomplete="off"
-          required
-        >
+        <div>
+          <h1>send msg ig</h1>
+          <p>type something and send it</p>
+        </div>
       </div>
 
-      <div class="field">
-        <label for="message">message</label>
+      <form id="messageForm">
+
+        <label for="username">
+          name <span>optional</span>
+        </label>
+
+        <input
+          id="username"
+          type="text"
+          maxlength="80"
+          placeholder="type a name"
+        >
+
+        <label for="message">
+          message
+        </label>
 
         <textarea
           id="message"
+          rows="7"
           maxlength="2000"
-          placeholder="write your message..."
+          placeholder="say something..."
           required
         ></textarea>
 
         <div class="counter">
-          <span id="charactercount">0</span>/2000
+          <span id="status">ready</span>
+          <span><b id="charCount">0</b>/2000</span>
         </div>
-      </div>
 
-      <button id="sendbutton" type="submit">
-        send message
-      </button>
+        <label for="image">
+          image <span>optional</span>
+        </label>
 
-      <div id="status"></div>
+        <input
+          id="image"
+          type="url"
+          placeholder="paste image url"
+        >
 
-    </form>
+        <div id="preview" class="image-preview hidden">
+          <img id="previewImage" alt="">
+        </div>
 
+        <button id="sendButton" type="submit">
+          <span id="buttonText">send msg ig</span>
+          <span id="spinner" class="spinner hidden"></span>
+        </button>
+
+      </form>
+
+      <div id="result" class="result hidden"></div>
+
+    </section>
   </main>
 
   <script src="script.js"></script>
-
 </body>
 </html>
