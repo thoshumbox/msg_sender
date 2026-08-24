@@ -1,135 +1,195 @@
-const webhook_url = "https://discord.com/api/webhooks/1540339272186593313/6KRzQOsooiCAJar_5-BBzuHtO97KSRo3MykjXFNsvkB_NUI2hN2LujX7u2-y39Y3aa8G";
+const form = document.getElementById("messageForm");
 
-const form = document.getElementById("messageform");
-const name_input = document.getElementById("name");
-const message_input = document.getElementById("message");
-const character_count = document.getElementById("charactercount");
-const send_button = document.getElementById("sendbutton");
-const status = document.getElementById("status");
+const webhookInput = document.getElementById("webhook");
+const usernameInput = document.getElementById("username");
+const messageInput = document.getElementById("message");
+const imageInput = document.getElementById("image");
 
+const charCount = document.getElementById("charCount");
+const statusText = document.getElementById("status");
 
-message_input.addEventListener("input", () => {
-  character_count.textContent = message_input.value.length;
-});
+const sendButton = document.getElementById("sendButton");
+const buttonText = document.getElementById("buttonText");
+const spinner = document.getElementById("spinner");
 
+const result = document.getElementById("result");
 
-form.addEventListener("submit", async (event) => {
+const preview = document.getElementById("preview");
+const previewImage = document.getElementById("previewImage");
 
-  event.preventDefault();
+function updateCharacterCount() {
+  charCount.textContent = messageInput.value.length;
+}
 
-  const name = name_input.value.trim().toLowerCase();
-  const message = message_input.value.trim().toLowerCase();
+function showResult(message, type) {
+  result.textContent = message;
+  result.className = `result ${type}`;
+}
 
-  if (!name || !message) {
-    status.textContent = "please enter a name and message.";
-    status.className = "error";
+function setLoading(loading) {
+  sendButton.disabled = loading;
+  spinner.classList.toggle("hidden", !loading);
+  buttonText.textContent = loading ? "Sending..." : "Send Message";
+}
+
+function isValidWebhook(url) {
+  try {
+    const parsed = new URL(url);
+
+    return (
+      parsed.protocol === "https:" &&
+      (
+        parsed.hostname === "discord.com" ||
+        parsed.hostname === "discordapp.com"
+      ) &&
+      parsed.pathname.includes("/api/webhooks/")
+    );
+  } catch {
+    return false;
+  }
+}
+
+function updateImagePreview() {
+  const url = imageInput.value.trim();
+
+  if (!url) {
+    preview.classList.add("hidden");
+    previewImage.removeAttribute("src");
     return;
   }
-
-  if (
-    !webhook_url ||
-    webhook_url === "paste_your_webhook_url_here"
-  ) {
-    status.textContent = "webhook has not been configured.";
-    status.className = "error";
-    return;
-  }
-
-  send_button.disabled = true;
-  send_button.textContent = "sending...";
-
-  status.textContent = "";
-  status.className = "";
-
-
-  const now = new Date();
-
-  const time = now
-    .toLocaleString("en-us", {
-      dateStyle: "short",
-      timeStyle: "medium"
-    })
-    .toLowerCase();
-
-  const footer_time = now
-    .toLocaleString("en-us", {
-      dateStyle: "short",
-      timeStyle: "short"
-    })
-    .toLowerCase();
-
-
-  const payload = {
-    embeds: [
-      {
-        title: "new message received",
-
-        fields: [
-          {
-            name: "from",
-            value: name,
-            inline: true
-          },
-
-          {
-            name: "time",
-            value: time,
-            inline: true
-          },
-
-          {
-            name: "message",
-            value: message
-          }
-        ],
-
-        footer: {
-          text: "sent via message form • " + footer_time
-        },
-
-        color: 0x5865f2
-      }
-    ]
-  };
-
 
   try {
+    new URL(url);
+  } catch {
+    preview.classList.add("hidden");
+    return;
+  }
 
-    const response = await fetch(webhook_url, {
-      method: "post",
+  previewImage.src = url;
+  preview.classList.remove("hidden");
+}
 
+imageInput.addEventListener("input", updateImagePreview);
+
+previewImage.addEventListener("error", () => {
+  preview.classList.add("hidden");
+});
+
+messageInput.addEventListener("input", () => {
+  updateCharacterCount();
+  statusText.textContent = messageInput.value.trim()
+    ? "Message ready"
+    : "Ready";
+});
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const webhook = webhookInput.value.trim();
+  const username = usernameInput.value.trim();
+  const message = messageInput.value.trim();
+  const image = imageInput.value.trim();
+
+  if (!isValidWebhook(webhook)) {
+    showResult(
+      "Please enter a valid Discord webhook URL.",
+      "error"
+    );
+    return;
+  }
+
+  if (!message) {
+    showResult(
+      "Please enter a message.",
+      "error"
+    );
+    return;
+  }
+
+  if (message.length > 2000) {
+    showResult(
+      "Your message is longer than 2000 characters.",
+      "error"
+    );
+    return;
+  }
+
+  const payload = {
+    content: message
+  };
+
+  if (username) {
+    payload.username = username;
+  }
+
+  // Optional image using a Discord embed.
+  if (image) {
+    try {
+      new URL(image);
+
+      payload.embeds = [
+        {
+          image: {
+            url: image
+          }
+        }
+      ];
+    } catch {
+      showResult(
+        "The image URL is not valid.",
+        "error"
+      );
+      return;
+    }
+  }
+
+  setLoading(true);
+  statusText.textContent = "Sending...";
+  result.classList.add("hidden");
+
+  try {
+    const response = await fetch(webhook, {
+      method: "POST",
       headers: {
-        "content-type": "application/json"
+        "Content-Type": "application/json"
       },
-
       body: JSON.stringify(payload)
     });
 
+    if (!response.ok) {
+      let errorMessage = `Webhook returned HTTP ${response.status}.`;
 
-    if (!response.ok && response.status !== 204) {
-      throw new Error("discord rejected the message.");
+      try {
+        const data = await response.json();
+
+        if (data.message) {
+          errorMessage += ` ${data.message}`;
+        }
+      } catch {
+        // Response wasn't JSON.
+      }
+
+      throw new Error(errorMessage);
     }
 
+    showResult(
+      "Message sent successfully.",
+      "success"
+    );
 
-    status.textContent = "message sent successfully.";
-    status.className = "success";
-
-    form.reset();
-
-    character_count.textContent = "0";
-
-
+    statusText.textContent = "Sent";
   } catch (error) {
-
     console.error(error);
 
-    status.textContent = "failed to send the message.";
-    status.className = "error";
+    showResult(
+      `Could not send the message. ${error.message}`,
+      "error"
+    );
 
+    statusText.textContent = "Failed";
+  } finally {
+    setLoading(false);
   }
-
-
-  send_button.disabled = false;
-  send_button.textContent = "send message";
-
 });
+
+updateCharacterCount();
