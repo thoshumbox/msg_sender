@@ -1,122 +1,219 @@
-const express = require("express");
-const path = require("path");
-require("dotenv").config();
-
-const app = express();
-
-const PORT = process.env.PORT || 3000;
-const WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
-
-if (!WEBHOOK_URL) {
-  console.error("error: discord webhook url is not configured.");
-  process.exit(1);
+* {
+  box-sizing: border-box;
 }
 
-app.use(express.json({ limit: "10kb" }));
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #111111;
+  color: #eeeeee;
+}
 
-app.use(express.static(path.join(__dirname, "public")));
+body {
+  min-height: 100vh;
+}
 
-app.post("/api/send", async (req, res) => {
-  try {
-    let name = String(req.body.name || "").trim();
-    let message = String(req.body.message || "").trim();
+.app {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
 
-    if (!name || !message) {
-      return res.status(400).json({
-        error: "name and message are required."
-      });
-    }
+.card {
+  width: 100%;
+  max-width: 620px;
+  padding: 28px;
+  background: #181818;
+  border: 1px solid #303030;
+}
 
-    if (name.length > 100) {
-      return res.status(400).json({
-        error: "name is too long."
-      });
-    }
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
 
-    if (message.length > 2000) {
-      return res.status(400).json({
-        error: "message is too long."
-      });
-    }
+.logo {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eeeeee;
+  color: #111111;
+  font-weight: bold;
+  font-size: 18px;
+}
 
-    // Make everything lowercase
-    name = name.toLowerCase();
-    message = message.toLowerCase();
+h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
 
-    const now = new Date();
+.header p {
+  margin: 5px 0 0;
+  color: #888888;
+  font-size: 13px;
+}
 
-    const time = now.toLocaleString("en-US", {
-      dateStyle: "short",
-      timeStyle: "medium"
-    }).toLowerCase();
+form {
+  display: flex;
+  flex-direction: column;
+}
 
-    const footerTime = now.toLocaleString("en-US", {
-      dateStyle: "short",
-      timeStyle: "short"
-    }).toLowerCase();
+label {
+  margin: 16px 0 7px;
+  font-size: 13px;
+  color: #cccccc;
+}
 
-    const discordPayload = {
-      embeds: [
-        {
-          title: "new message received",
+label span {
+  color: #666666;
+}
 
-          fields: [
-            {
-              name: "from",
-              value: name,
-              inline: true
-            },
-            {
-              name: "time",
-              value: time,
-              inline: true
-            },
-            {
-              name: "message",
-              value: message
-            }
-          ],
+input,
+textarea {
+  width: 100%;
+  border: 1px solid #353535;
+  background: #101010;
+  color: #eeeeee;
+  padding: 12px;
+  outline: none;
+  border-radius: 0;
+  font-family: inherit;
+  font-size: 14px;
+}
 
-          footer: {
-            text: `sent via message form • ${footerTime}`
-          },
+input:focus,
+textarea:focus {
+  border-color: #777777;
+}
 
-          color: 0x5865F2
-        }
-      ]
-    };
+textarea {
+  resize: vertical;
+  min-height: 140px;
+  line-height: 1.5;
+}
 
-    const response = await fetch(WEBHOOK_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(discordPayload)
-    });
+input::placeholder,
+textarea::placeholder {
+  color: #555555;
+}
 
-    if (!response.ok) {
-      const discordError = await response.text();
+.counter {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: #666666;
+  font-size: 11px;
+}
 
-      console.error("discord error:", discordError);
+#status {
+  color: #777777;
+}
 
-      return res.status(500).json({
-        error: "could not send the message."
-      });
-    }
+button {
+  margin-top: 22px;
+  width: 100%;
+  height: 44px;
+  border: 1px solid #eeeeee;
+  border-radius: 0;
+  background: #eeeeee;
+  color: #111111;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+}
 
-    return res.json({
-      success: true
-    });
+button:hover {
+  background: #d8d8d8;
+}
 
-  } catch (error) {
-    console.error("server error:", error);
+button:active {
+  background: #bbbbbb;
+}
 
-    return res.status(500).json({
-      error: "something went wrong."
-    });
+button:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.result {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 0;
+  border: 1px solid #333333;
+  font-size: 13px;
+}
+
+.result.success {
+  color: #9ee6b0;
+  background: #122016;
+  border-color: #285832;
+}
+
+.result.error {
+  color: #f09a9a;
+  background: #211313;
+  border-color: #5a2929;
+}
+
+.image-preview {
+  margin-top: 10px;
+  border: 1px solid #303030;
+  background: #101010;
+}
+
+.image-preview img {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+}
+
+.notice {
+  margin: 18px 0 0;
+  color: #555555;
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #777777;
+  border-top-color: #111111;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
-});
+}
 
-app.listen(PORT, () => {
-  console.log(`server running on port ${PORT}`);
-});
+@media (max-width: 600px) {
+  .app {
+    padding: 12px;
+    align-items: flex-start;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}
