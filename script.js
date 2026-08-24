@@ -1,6 +1,7 @@
+const WEBHOOK_URL = "https://discord.com/api/webhooks/1495800910792753257/PnW9TWGmtOoMFN5F3LKPDrl3bJztBbZsnB1VQcCUvQk_ky92X81FTltUBwbaC1uBhgBN";
+
 const form = document.getElementById("messageForm");
 
-const webhookInput = document.getElementById("webhook");
 const usernameInput = document.getElementById("username");
 const messageInput = document.getElementById("message");
 const imageInput = document.getElementById("image");
@@ -29,24 +30,7 @@ function showResult(message, type) {
 function setLoading(loading) {
   sendButton.disabled = loading;
   spinner.classList.toggle("hidden", !loading);
-  buttonText.textContent = loading ? "Sending..." : "Send Message";
-}
-
-function isValidWebhook(url) {
-  try {
-    const parsed = new URL(url);
-
-    return (
-      parsed.protocol === "https:" &&
-      (
-        parsed.hostname === "discord.com" ||
-        parsed.hostname === "discordapp.com"
-      ) &&
-      parsed.pathname.includes("/api/webhooks/")
-    );
-  } catch {
-    return false;
-  }
+  buttonText.textContent = loading ? "sending" : "send msg ig";
 }
 
 function updateImagePreview() {
@@ -77,6 +61,7 @@ previewImage.addEventListener("error", () => {
 
 messageInput.addEventListener("input", () => {
   updateCharacterCount();
+
   statusText.textContent = messageInput.value.trim()
     ? "Message ready"
     : "Ready";
@@ -85,22 +70,13 @@ messageInput.addEventListener("input", () => {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const webhook = webhookInput.value.trim();
   const username = usernameInput.value.trim();
   const message = messageInput.value.trim();
   const image = imageInput.value.trim();
 
-  if (!isValidWebhook(webhook)) {
-    showResult(
-      "Please enter a valid Discord webhook URL.",
-      "error"
-    );
-    return;
-  }
-
   if (!message) {
     showResult(
-      "Please enter a message.",
+      "bro you didnt even type a message",
       "error"
     );
     return;
@@ -108,7 +84,7 @@ form.addEventListener("submit", async (event) => {
 
   if (message.length > 2000) {
     showResult(
-      "Your message is longer than 2000 characters.",
+      "innit your fucking mssage is too fucking long.",
       "error"
     );
     return;
@@ -122,7 +98,6 @@ form.addEventListener("submit", async (event) => {
     payload.username = username;
   }
 
-  // Optional image using a Discord embed.
   if (image) {
     try {
       new URL(image);
@@ -136,7 +111,7 @@ form.addEventListener("submit", async (event) => {
       ];
     } catch {
       showResult(
-        "The image URL is not valid.",
+        "halaa image url not valid",
         "error"
       );
       return;
@@ -144,11 +119,11 @@ form.addEventListener("submit", async (event) => {
   }
 
   setLoading(true);
-  statusText.textContent = "Sending...";
+  statusText.textContent = "sending ok js wait";
   result.classList.add("hidden");
 
   try {
-    const response = await fetch(webhook, {
+    const response = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -173,16 +148,19 @@ form.addEventListener("submit", async (event) => {
     }
 
     showResult(
-      "Message sent successfully.",
+      "msg sent",
       "success"
     );
 
     statusText.textContent = "Sent";
+    messageInput.value = "";
+    updateCharacterCount();
+
   } catch (error) {
     console.error(error);
 
     showResult(
-      `Could not send the message. ${error.message}`,
+      `couldnt even send the fucking message. ${error.message}`,
       "error"
     );
 
