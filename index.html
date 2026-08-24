@@ -6,6 +6,7 @@
   <title>send msg ig</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <main class="app">
@@ -56,12 +57,14 @@
 
         <input
           id="image"
-          type="url"
-          placeholder="paste image url"
+          type="file"
+          accept="image/*"
         >
 
+        <div id="fileName" class="file-name hidden"></div>
+
         <div id="preview" class="image-preview hidden">
-          <img id="previewImage" alt="">
+          <img id="previewImage" alt="Selected image preview">
         </div>
 
         <button id="sendButton" type="submit">
@@ -77,5 +80,6 @@
   </main>
 
   <script src="script.js"></script>
+
 </body>
 </html>
