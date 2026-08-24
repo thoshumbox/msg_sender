@@ -106,6 +106,49 @@ textarea::placeholder {
   color: #555555;
 }
 
+
+/* -------------------------
+   File input
+------------------------- */
+
+input[type="file"] {
+  cursor: pointer;
+  padding: 10px;
+}
+
+input[type="file"]::file-selector-button {
+  margin-right: 10px;
+  padding: 8px 12px;
+  border: 1px solid #eeeeee;
+  background: #eeeeee;
+  color: #111111;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: #d8d8d8;
+}
+
+
+/* -------------------------
+   File name
+------------------------- */
+
+.file-name {
+  margin-top: 8px;
+  color: #777777;
+  font-size: 11px;
+  word-break: break-all;
+}
+
+
+/* -------------------------
+   Counter
+------------------------- */
+
 .counter {
   display: flex;
   justify-content: space-between;
@@ -117,6 +160,11 @@ textarea::placeholder {
 #status {
   color: #777777;
 }
+
+
+/* -------------------------
+   Button
+------------------------- */
 
 button {
   margin-top: 22px;
@@ -145,6 +193,11 @@ button:disabled {
   opacity: 0.5;
 }
 
+
+/* -------------------------
+   Result
+------------------------- */
+
 .result {
   margin-top: 16px;
   padding: 12px;
@@ -165,6 +218,11 @@ button:disabled {
   border-color: #5a2929;
 }
 
+
+/* -------------------------
+   Image preview
+------------------------- */
+
 .image-preview {
   margin-top: 10px;
   border: 1px solid #303030;
@@ -178,17 +236,19 @@ button:disabled {
   object-fit: contain;
 }
 
-.notice {
-  margin: 18px 0 0;
-  color: #555555;
-  font-size: 11px;
-  line-height: 1.5;
-  text-align: center;
-}
+
+/* -------------------------
+   Hidden
+------------------------- */
 
 .hidden {
   display: none !important;
 }
+
+
+/* -------------------------
+   Spinner
+------------------------- */
 
 .spinner {
   display: inline-block;
@@ -207,7 +267,13 @@ button:disabled {
   }
 }
 
+
+/* -------------------------
+   Mobile
+------------------------- */
+
 @media (max-width: 600px) {
+
   .app {
     padding: 12px;
     align-items: flex-start;
@@ -216,4 +282,5 @@ button:disabled {
   .card {
     padding: 20px;
   }
+
 }
