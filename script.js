@@ -1,4 +1,4 @@
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1495800910792753257/PnW9TWGmtOoMFN5F3LKPDrl3bJztBbZsnB1VQcCUvQk_ky92X81FTltUBwbaC1uBhgBN";
+const WEBHOOK_URL = "https://discord.com/api/webhooks/1541638515077685288/WY-isvl6ymHdmcbc-4HqzSNZN1qnp4eFlivtcxTnZamstDXkp7oqCeMBvS_l_ViAP9vQ";
 
 const form = document.getElementById("messageForm");
 
