@@ -1,45 +1,61 @@
-const WEBHOOK_URL = "YOUR_NEW_DISCORD_WEBHOOK_URL";
+const FUCKING_WEBHOOK_URL = "https://discord.com/api/webhooks/1541638515077685288/WY-isvl6ymHdmcbc-4HqzSNZN1qnp4eFlivtcxTnZamstDXkp7oqCeMBvS_l_ViAP9vQ";
 
-const form = document.getElementById("messageForm");
+const FUCKING_FORM = document.getElementById("messageForm");
 
-const usernameInput = document.getElementById("username");
-const messageInput = document.getElementById("message");
-const imageInput = document.getElementById("image");
+const FUCKING_USERNAME =
+  document.getElementById("username");
+const FUCKING_MESSAGE =
+  document.getElementById("message");
+const FUCKING_IMAGE =
+  document.getElementById("image");
+const FUCKING_CHAR_COUNT =
+  document.getElementById("charCount");
+const FUCKING_STATUS =
+  document.getElementById("status");
+const FUCKING_SEND_BUTTON =
+  document.getElementById("sendButton");
+const FUCKING_BUTTON_TEXT =
+  document.getElementById("buttonText");
+const FUCKING_SPINNER =
+  document.getElementById("spinner");
+const FUCKING_RESULT =
+  document.getElementById("result");
+const FUCKING_PREVIEW =
+  document.getElementById("preview");
+const FUCKING_PREVIEW_IMAGE =
+  document.getElementById("previewImage");
+const FUCKING_FILE_NAME =
+  document.getElementById("fileName");
 
-const charCount = document.getElementById("charCount");
-const statusText = document.getElementById("status");
+let HOLY_SHIT_IMAGE = null;
+let GODDAMN_PREVIEW_URL = null;
 
-const sendButton = document.getElementById("sendButton");
-const buttonText = document.getElementById("buttonText");
-const spinner = document.getElementById("spinner");
-
-const result = document.getElementById("result");
-
-const preview = document.getElementById("preview");
-const previewImage = document.getElementById("previewImage");
-const fileName = document.getElementById("fileName");
-
-let selectedImage = null;
-let previewUrl = null;
-
-function updateCharacterCount() {
-  charCount.textContent = messageInput.value.length;
+function updateFuckingCharacterCount() {
+  FUCKING_CHAR_COUNT.textContent =
+    FUCKING_MESSAGE.value.length;
 }
 
-function showResult(message, type) {
-  result.textContent = message;
-  result.className = `result ${type}`;
+function showFuckingResult(message, type) {
+  FUCKING_RESULT.textContent = message;
+  FUCKING_RESULT.className =
+    `result ${type}`;
 }
 
-function setLoading(loading) {
-  sendButton.disabled = loading;
-  spinner.classList.toggle("hidden", !loading);
-  buttonText.textContent = loading
-    ? "sending"
-    : "send msg ig";
+function fuckingSetLoading(loading) {
+  FUCKING_SEND_BUTTON.disabled = loading;
+
+  FUCKING_SPINNER.classList.toggle(
+    "hidden",
+    !loading
+  );
+
+  FUCKING_BUTTON_TEXT.textContent =
+    loading
+      ? "sending"
+      : "send msg ig";
 }
 
-function formatFileSize(bytes) {
+function whatTheFuckIsTheFileSize(bytes) {
   if (bytes < 1024) {
     return `${bytes} B`;
   }
@@ -51,194 +67,306 @@ function formatFileSize(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-imageInput.addEventListener("change", () => {
-  const file = imageInput.files[0];
+FUCKING_IMAGE.addEventListener(
+  "change",
+  () => {
 
-  if (previewUrl) {
-    URL.revokeObjectURL(previewUrl);
-    previewUrl = null;
-  }
+    const HOLY_FUCKING_FILE =
+      FUCKING_IMAGE.files[0];
 
-  selectedImage = null;
-
-  preview.classList.add("hidden");
-  fileName.classList.add("hidden");
-
-  previewImage.removeAttribute("src");
-  fileName.textContent = "";
-
-  if (!file) {
-    statusText.textContent = messageInput.value.trim()
-      ? "message ready innit"
-      : "ready";
-    return;
-  }
-
-  if (!file.type.startsWith("image/")) {
-    showResult(
-      "go select image file or something",
-      "error"
-    );
-
-    imageInput.value = "";
-    return;
-  }
-
-  if (file.size > 10 * 1024 * 1024) {
-    showResult(
-      "image is too fucking big nigga keep it under 10 MB",
-      "error"
-    );
-
-    imageInput.value = "";
-    return;
-  }
-
-  selectedImage = file;
-
-  fileName.textContent =
-    `${file.name} (${formatFileSize(file.size)})`;
-
-  fileName.classList.remove("hidden");
-
-  previewUrl = URL.createObjectURL(file);
-
-  previewImage.src = previewUrl;
-  preview.classList.remove("hidden");
-
-  statusText.textContent = "Image ready";
-});
-
-messageInput.addEventListener("input", () => {
-  updateCharacterCount();
-
-  if (messageInput.value.trim()) {
-    statusText.textContent = "message ready";
-  } else if (selectedImage) {
-    statusText.textContent = "image ready";
-  } else {
-    statusText.textContent = "ready";
-  }
-});
-
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  const username = usernameInput.value.trim();
-  const message = messageInput.value.trim();
-
-  if (!message && !selectedImage) {
-    showResult(
-      "bitch add a message or an image",
-      "error"
-    );
-
-    statusText.textContent = "nothing to send (omg lobcorp ref)";
-    return;
-  }
-
-  if (message.length > 2000) {
-    showResult(
-      "innit your fucking mssage is too fucking long.",
-      "error"
-    );
-
-    return;
-  }
-
-  setLoading(true);
-
-  statusText.textContent = "sending ok js wait";
-  result.classList.add("hidden");
-
-  try {
-    const formData = new FormData();
-
-    const payload = {};
-
-    if (message) {
-      payload.content = message;
-    }
-
-    if (username) {
-      payload.username = username;
-    }
-
-    formData.append(
-      "payload_json",
-      JSON.stringify(payload)
-    );
-
-    if (selectedImage) {
-      formData.append(
-        "files[0]",
-        selectedImage,
-        selectedImage.name
+    if (GODDAMN_PREVIEW_URL) {
+      URL.revokeObjectURL(
+        GODDAMN_PREVIEW_URL
       );
+
+      GODDAMN_PREVIEW_URL = null;
     }
 
-    const response = await fetch(
-      WEBHOOK_URL,
-      {
-        method: "POST",
-        body: formData
-      }
+    HOLY_SHIT_IMAGE = null;
+
+    FUCKING_PREVIEW.classList.add(
+      "hidden"
     );
 
-    if (!response.ok) {
-      let errorMessage =
-        `Webhook returned HTTP ${response.status}.`;
+    FUCKING_FILE_NAME.classList.add(
+      "hidden"
+    );
 
-      try {
-        const data = await response.json();
+    FUCKING_PREVIEW_IMAGE.removeAttribute(
+      "src"
+    );
 
-        if (data.message) {
-          errorMessage += ` ${data.message}`;
-        }
-      } catch {
-      }
+    FUCKING_FILE_NAME.textContent = "";
 
-      throw new Error(errorMessage);
+    if (!HOLY_FUCKING_FILE) {
+      FUCKING_STATUS.textContent =
+        FUCKING_MESSAGE.value.trim()
+          ? "message ready innit"
+          : "ready";
+
+      return;
     }
 
-    showResult(
-      "msg sent",
-      "success"
-    );
+    if (
+      !HOLY_FUCKING_FILE.type.startsWith(
+        "image/"
+      )
+    ) {
 
-    statusText.textContent = "Sent";
+      showFuckingResult(
+        "go select a fucking image",
+        "error"
+      );
 
-    messageInput.value = "";
-    imageInput.value = "";
+      FUCKING_IMAGE.value = "";
 
-    selectedImage = null;
-
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-      previewUrl = null;
+      return;
     }
 
-    previewImage.removeAttribute("src");
-    preview.classList.add("hidden");
+    if (
+      HOLY_FUCKING_FILE.size >
+      10 * 1024 * 1024
+    ) {
 
-    fileName.classList.add("hidden");
-    fileName.textContent = "";
+      showFuckingResult(
+        "nigga image too big like yo mama go under 10mb or something",
+        "error"
+      );
 
-    updateCharacterCount();
+      FUCKING_IMAGE.value = "";
 
-  } catch (error) {
-    console.error(error);
+      return;
+    }
 
-    showResult(
-      `couldnt even send the fucking message. ${error.message}`,
-      "error"
+    HOLY_SHIT_IMAGE =
+      HOLY_FUCKING_FILE;
+
+    FUCKING_FILE_NAME.textContent =
+      `${HOLY_FUCKING_FILE.name} (${whatTheFuckIsTheFileSize(
+        HOLY_FUCKING_FILE.size
+      )})`;
+
+    FUCKING_FILE_NAME.classList.remove(
+      "hidden"
     );
 
-    statusText.textContent = "failed";
+    GODDAMN_PREVIEW_URL =
+      URL.createObjectURL(
+        HOLY_FUCKING_FILE
+      );
 
-  } finally {
-    setLoading(false);
+    FUCKING_PREVIEW_IMAGE.src =
+      GODDAMN_PREVIEW_URL;
+
+    FUCKING_PREVIEW.classList.remove(
+      "hidden"
+    );
+
+    FUCKING_STATUS.textContent =
+      "image ready, fucking finally";
   }
-});
+);
 
-updateCharacterCount();
+FUCKING_MESSAGE.addEventListener(
+  "input",
+  () => {
+
+    updateFuckingCharacterCount();
+
+    if (FUCKING_MESSAGE.value.trim()) {
+
+      FUCKING_STATUS.textContent =
+        "message ready";
+
+    } else if (HOLY_SHIT_IMAGE) {
+
+      FUCKING_STATUS.textContent =
+        "image ready";
+
+    } else {
+
+      FUCKING_STATUS.textContent =
+        "ready, apparently";
+    }
+  }
+);
+
+FUCKING_FORM.addEventListener(
+  "submit",
+  async (event) => {
+
+    event.preventDefault();
+
+    const FUCKING_USERNAME =
+      FUCKING_USERNAME_INPUT_VALUE();
+
+    const FUCKING_TEXT =
+      FUCKING_MESSAGE.value.trim();
+
+    if (
+      !FUCKING_TEXT &&
+      !HOLY_SHIT_IMAGE
+    ) {
+
+      showFuckingResult(
+        "add a fuckin msg or image",
+        "error"
+      );
+
+      FUCKING_STATUS.textContent =
+        "nothing to fucking send";
+
+      return;
+    }
+
+    if (
+      FUCKING_TEXT.length > 2000
+    ) {
+
+      showFuckingResult(
+        "your fucking message fucking is fucking too fucking long",
+        "error"
+      );
+
+      return;
+    }
+
+    fuckingSetLoading(true);
+
+    FUCKING_STATUS.textContent =
+      "sending shit";
+
+    FUCKING_RESULT.classList.add(
+      "hidden"
+    );
+
+    try {
+
+      const FUCKING_FORM_DATA =
+        new FormData();
+
+      const FUCKING_PAYLOAD = {};
+
+      if (FUCKING_TEXT) {
+        FUCKING_PAYLOAD.content =
+          FUCKING_TEXT;
+      }
+
+      if (FUCKING_USERNAME) {
+        FUCKING_PAYLOAD.username =
+          FUCKING_USERNAME;
+      }
+
+      FUCKING_FORM_DATA.append(
+        "payload_json",
+        JSON.stringify(
+          FUCKING_PAYLOAD
+        )
+      );
+
+      if (HOLY_SHIT_IMAGE) {
+
+        FUCKING_FORM_DATA.append(
+          "files[0]",
+          HOLY_SHIT_IMAGE,
+          HOLY_SHIT_IMAGE.name
+        );
+      }
+
+      const FUCKING_RESPONSE =
+        await fetch(
+          FUCKING_WEBHOOK_URL,
+          {
+            method: "POST",
+            body: FUCKING_FORM_DATA
+          }
+        );
+
+      if (!FUCKING_RESPONSE.ok) {
+
+        let FUCKING_ERROR =
+          `discord said fuck off with HTTP ${FUCKING_RESPONSE.status}.`;
+
+        try {
+
+          const FUCKING_DATA =
+            await FUCKING_RESPONSE.json();
+
+          if (FUCKING_DATA.message) {
+            FUCKING_ERROR +=
+              ` ${FUCKING_DATA.message}`;
+          }
+
+        } catch {
+        }
+
+        throw new Error(
+          FUCKING_ERROR
+        );
+      }
+
+      showFuckingResult(
+        "msg sent wow",
+        "success"
+      );
+
+      FUCKING_STATUS.textContent =
+        "sent somehow ig";
+
+      FUCKING_MESSAGE.value = "";
+      FUCKING_IMAGE.value = "";
+
+      HOLY_SHIT_IMAGE = null;
+
+      if (GODDAMN_PREVIEW_URL) {
+
+        URL.revokeObjectURL(
+          GODDAMN_PREVIEW_URL
+        );
+
+        GODDAMN_PREVIEW_URL = null;
+      }
+
+      FUCKING_PREVIEW_IMAGE
+        .removeAttribute("src");
+
+      FUCKING_PREVIEW
+        .classList.add("hidden");
+
+      FUCKING_FILE_NAME
+        .classList.add("hidden");
+
+      FUCKING_FILE_NAME.textContent = "";
+
+      updateFuckingCharacterCount();
+
+    } catch (FUCKING_ERROR) {
+
+      console.error(
+        "something broke nigga:",
+        FUCKING_ERROR
+      );
+
+      showFuckingResult(
+        `ccould not even send the fucking thing ${FUCKING_ERROR.message}`,
+        "error"
+      );
+
+      FUCKING_STATUS.textContent =
+        "failed boohoo";
+
+    } finally {
+
+      fuckingSetLoading(false);
+    }
+  }
+);
+
+function FUCKING_USERNAME_INPUT_VALUE() {
+  return document
+    .getElementById("username")
+    .value
+    .trim();
+}
+
+updateFuckingCharacterCount();
