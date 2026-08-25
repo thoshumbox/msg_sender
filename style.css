@@ -106,11 +106,6 @@ textarea::placeholder {
   color: #555555;
 }
 
-
-/* -------------------------
-   File input
-------------------------- */
-
 input[type="file"] {
   cursor: pointer;
   padding: 10px;
@@ -132,22 +127,12 @@ input[type="file"]::file-selector-button:hover {
   background: #d8d8d8;
 }
 
-
-/* -------------------------
-   File name
-------------------------- */
-
 .file-name {
   margin-top: 8px;
   color: #777777;
   font-size: 11px;
   word-break: break-all;
 }
-
-
-/* -------------------------
-   Counter
-------------------------- */
 
 .counter {
   display: flex;
@@ -160,11 +145,6 @@ input[type="file"]::file-selector-button:hover {
 #status {
   color: #777777;
 }
-
-
-/* -------------------------
-   Button
-------------------------- */
 
 button {
   margin-top: 22px;
@@ -193,11 +173,6 @@ button:disabled {
   opacity: 0.5;
 }
 
-
-/* -------------------------
-   Result
-------------------------- */
-
 .result {
   margin-top: 16px;
   padding: 12px;
@@ -218,11 +193,6 @@ button:disabled {
   border-color: #5a2929;
 }
 
-
-/* -------------------------
-   Image preview
-------------------------- */
-
 .image-preview {
   margin-top: 10px;
   border: 1px solid #303030;
@@ -236,19 +206,9 @@ button:disabled {
   object-fit: contain;
 }
 
-
-/* -------------------------
-   Hidden
-------------------------- */
-
 .hidden {
   display: none !important;
 }
-
-
-/* -------------------------
-   Spinner
-------------------------- */
 
 .spinner {
   display: inline-block;
@@ -267,13 +227,7 @@ button:disabled {
   }
 }
 
-
-/* -------------------------
-   Mobile
-------------------------- */
-
 @media (max-width: 600px) {
-
   .app {
     padding: 12px;
     align-items: flex-start;
@@ -282,5 +236,4 @@ button:disabled {
   .card {
     padding: 20px;
   }
-
 }
