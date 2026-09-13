@@ -1,11 +1,6 @@
 const FUCKING_WEBHOOK_URL =
   "https://discord.com/api/webhooks/1541638515077685288/WY-isvl6ymHdmcbc-4HqzSNZN1qnp4eFlivtcxTnZamstDXkp7oqCeMBvS_l_ViAP9vQ";
 
-
-// ========================================
-// ELEMENTS
-// ========================================
-
 const FUCKING_FORM =
   document.getElementById("messageForm");
 
@@ -60,48 +55,26 @@ const FUCKING_PREVIEW_IMAGE =
 const FUCKING_FILE_NAME =
   document.getElementById("fileName");
 
-
-// ========================================
-// VARIABLES
-// ========================================
-
 let HOLY_SHIT_IMAGE = null;
-
 let GODDAMN_PREVIEW_URL = null;
-
 let FUCKING_PROFILE_IMAGE_URL = null;
-
-
-// ========================================
-// STORAGE KEY
-// ========================================
 
 const FUCKING_PROFILE_STORAGE_KEY =
   "sendMsgIgProfile";
 
 
-// ========================================
-// CHARACTER COUNT
-// ========================================
+/* ========================================
+   HELPERS
+   ======================================== */
 
 function updateFuckingCharacterCount() {
-
   FUCKING_CHAR_COUNT.textContent =
     FUCKING_MESSAGE.value.length;
 }
 
 
-// ========================================
-// RESULT MESSAGE
-// ========================================
-
-function showFuckingResult(
-  message,
-  type
-) {
-
-  FUCKING_RESULT.textContent =
-    message;
+function showFuckingResult(message, type) {
+  FUCKING_RESULT.textContent = message;
 
   FUCKING_RESULT.className =
     `result ${type}`;
@@ -112,14 +85,7 @@ function showFuckingResult(
 }
 
 
-// ========================================
-// LOADING STATE
-// ========================================
-
-function fuckingSetLoading(
-  loading
-) {
-
+function fuckingSetLoading(loading) {
   FUCKING_SEND_BUTTON.disabled =
     loading;
 
@@ -135,26 +101,13 @@ function fuckingSetLoading(
 }
 
 
-// ========================================
-// FILE SIZE
-// ========================================
-
-function whatTheFuckIsTheFileSize(
-  bytes
-) {
-
+function whatTheFuckIsTheFileSize(bytes) {
   if (bytes < 1024) {
     return `${bytes} B`;
   }
 
-  if (
-    bytes <
-    1024 * 1024
-  ) {
-
-    return `${(
-      bytes / 1024
-    ).toFixed(1)} KB`;
+  if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)} KB`;
   }
 
   return `${(
@@ -164,174 +117,100 @@ function whatTheFuckIsTheFileSize(
 }
 
 
-// ========================================
-// READ FILE AS DATA URL
-// ========================================
-
-function fuckingReadFileAsDataURL(
-  file
-) {
-
+function fuckingReadFileAsDataURL(file) {
   return new Promise(
     (resolve, reject) => {
-
-      const FUCKING_READER =
+      const reader =
         new FileReader();
 
-      FUCKING_READER.onload = () => {
-        resolve(
-          FUCKING_READER.result
-        );
+      reader.onload = () => {
+        resolve(reader.result);
       };
 
-      FUCKING_READER.onerror = () => {
+      reader.onerror = () => {
         reject(
           new Error(
-            "could not read the profile picture"
+            "could not read profile picture"
           )
         );
       };
 
-      FUCKING_READER.readAsDataURL(
-        file
-      );
+      reader.readAsDataURL(file);
     }
   );
 }
 
 
-// ========================================
-// SAVE PROFILE
-// ========================================
+/* ========================================
+   SAVE / LOAD PROFILE
+   ======================================== */
 
 async function saveFuckingProfile() {
-
-  const FUCKING_USERNAME =
+  const username =
     FUCKING_USERNAME_INPUT.value.trim();
 
-  let FUCKING_AVATAR =
-    null;
-
-
-  /*
-    If the profile picture was changed,
-    convert it to a data URL so it can
-    survive page refreshes.
-  */
+  let avatar = null;
 
   if (
     FUCKING_PROFILE_PIC.files &&
     FUCKING_PROFILE_PIC.files[0]
   ) {
-
-    try {
-
-      FUCKING_AVATAR =
-        await fuckingReadFileAsDataURL(
-          FUCKING_PROFILE_PIC.files[0]
-        );
-
-    } catch (FUCKING_ERROR) {
-
-      console.error(
-        FUCKING_ERROR
+    avatar =
+      await fuckingReadFileAsDataURL(
+        FUCKING_PROFILE_PIC.files[0]
       );
-
-      return;
-    }
-
   } else {
-
-    /*
-      If no new file was selected,
-      keep the existing saved avatar.
-    */
-
-    const FUCKING_EXISTING =
+    const saved =
       localStorage.getItem(
         FUCKING_PROFILE_STORAGE_KEY
       );
 
-    if (FUCKING_EXISTING) {
-
+    if (saved) {
       try {
+        const profile =
+          JSON.parse(saved);
 
-        const FUCKING_PROFILE =
-          JSON.parse(
-            FUCKING_EXISTING
-          );
-
-        FUCKING_AVATAR =
-          FUCKING_PROFILE.avatar || null;
+        avatar =
+          profile.avatar || null;
 
       } catch {
-        FUCKING_AVATAR = null;
+        avatar = null;
       }
     }
   }
 
-
-  const FUCKING_PROFILE = {
-
-    username:
-      FUCKING_USERNAME,
-
-    avatar:
-      FUCKING_AVATAR
+  const profile = {
+    username,
+    avatar
   };
-
 
   localStorage.setItem(
     FUCKING_PROFILE_STORAGE_KEY,
-    JSON.stringify(
-      FUCKING_PROFILE
-    )
+    JSON.stringify(profile)
   );
 }
 
 
-// ========================================
-// LOAD PROFILE
-// ========================================
-
 function loadFuckingProfile() {
-
-  const FUCKING_SAVED_PROFILE =
+  const saved =
     localStorage.getItem(
       FUCKING_PROFILE_STORAGE_KEY
     );
 
-
-  if (
-    !FUCKING_SAVED_PROFILE
-  ) {
-
+  if (!saved) {
     return;
   }
 
-
   try {
-
-    const FUCKING_PROFILE =
-      JSON.parse(
-        FUCKING_SAVED_PROFILE
-      );
-
-
-    // Restore username.
+    const profile =
+      JSON.parse(saved);
 
     FUCKING_USERNAME_INPUT.value =
-      FUCKING_PROFILE.username || "";
+      profile.username || "";
 
-
-    // Restore profile picture.
-
-    if (
-      FUCKING_PROFILE.avatar
-    ) {
-
+    if (profile.avatar) {
       FUCKING_PROFILE_PREVIEW_IMAGE.src =
-        FUCKING_PROFILE.avatar;
+        profile.avatar;
 
       FUCKING_PROFILE_PREVIEW.classList.remove(
         "hidden"
@@ -345,13 +224,10 @@ function loadFuckingProfile() {
       );
     }
 
-  } catch (
-    FUCKING_ERROR
-  ) {
-
+  } catch (error) {
     console.error(
-      "Could not load profile:",
-      FUCKING_ERROR
+      "could not load profile:",
+      error
     );
 
     localStorage.removeItem(
@@ -361,109 +237,161 @@ function loadFuckingProfile() {
 }
 
 
-// ========================================
-// RESET PROFILE
-// ========================================
+/* ========================================
+   CHANGE WEBHOOK PROFILE
+   ======================================== */
 
-FUCKING_RESET_PROFILE.addEventListener(
-  "click",
-  () => {
+async function changeFuckingWebhookProfile() {
+  const username =
+    FUCKING_USERNAME_INPUT.value.trim();
 
-    localStorage.removeItem(
-      FUCKING_PROFILE_STORAGE_KEY
-    );
+  let avatar = null;
 
-
-    FUCKING_USERNAME_INPUT.value =
-      "";
-
-    FUCKING_PROFILE_PIC.value =
-      "";
-
-
-    if (
-      FUCKING_PROFILE_IMAGE_URL
-    ) {
-
-      URL.revokeObjectURL(
-        FUCKING_PROFILE_IMAGE_URL
+  /*
+   * Get the selected local profile file.
+   */
+  if (
+    FUCKING_PROFILE_PIC.files &&
+    FUCKING_PROFILE_PIC.files[0]
+  ) {
+    avatar =
+      await fuckingReadFileAsDataURL(
+        FUCKING_PROFILE_PIC.files[0]
+      );
+  } else {
+    /*
+     * If the page was refreshed, get
+     * the saved local profile image.
+     */
+    const saved =
+      localStorage.getItem(
+        FUCKING_PROFILE_STORAGE_KEY
       );
 
-      FUCKING_PROFILE_IMAGE_URL =
-        null;
+    if (saved) {
+      try {
+        const profile =
+          JSON.parse(saved);
+
+        avatar =
+          profile.avatar || null;
+
+      } catch {
+        avatar = null;
+      }
+    }
+  }
+
+
+  /*
+   * Only change the webhook if we
+   * actually have something to change.
+   */
+  if (!username && !avatar) {
+    return;
+  }
+
+
+  const webhookProfile = {};
+
+
+  if (username) {
+    webhookProfile.name =
+      username;
+  }
+
+
+  if (avatar) {
+    webhookProfile.avatar =
+      avatar;
+  }
+
+
+  /*
+   * Discord's Modify Webhook endpoint.
+   *
+   * This changes the actual webhook
+   * profile, not just the message.
+   */
+  const response =
+    await fetch(
+      FUCKING_WEBHOOK_URL,
+      {
+        method: "PATCH",
+
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+
+        body:
+          JSON.stringify(
+            webhookProfile
+          )
+      }
+    );
+
+
+  if (!response.ok) {
+    let errorMessage =
+      `Discord could not update the webhook profile (HTTP ${response.status}).`;
+
+    try {
+      const data =
+        await response.json();
+
+      if (data.message) {
+        errorMessage +=
+          ` ${data.message}`;
+      }
+
+    } catch {
+      // Nothing to parse.
     }
 
-
-    FUCKING_PROFILE_PREVIEW_IMAGE
-      .removeAttribute("src");
-
-
-    FUCKING_PROFILE_PREVIEW
-      .classList.add("hidden");
-
-
-    FUCKING_PROFILE_FILE_NAME
-      .classList.add("hidden");
-
-
-    FUCKING_PROFILE_FILE_NAME.textContent =
-      "";
-
-
-    FUCKING_STATUS.textContent =
-      "profile reset";
-
-
-    showFuckingResult(
-      "profile reset back to normal",
-      "success"
+    throw new Error(
+      errorMessage
     );
   }
-);
+}
 
 
-// ========================================
-// PROFILE NAME CHANGE
-// ========================================
+/* ========================================
+   PROFILE NAME
+   ======================================== */
 
 FUCKING_USERNAME_INPUT.addEventListener(
   "input",
   async () => {
+    try {
+      await saveFuckingProfile();
 
-    await saveFuckingProfile();
+      FUCKING_STATUS.textContent =
+        "profile saved";
 
-    FUCKING_STATUS.textContent =
-      "profile saved";
+    } catch (error) {
+      console.error(error);
+    }
   }
 );
 
 
-// ========================================
-// PROFILE PICTURE CHANGE
-// ========================================
+/* ========================================
+   PROFILE PICTURE
+   ======================================== */
 
 FUCKING_PROFILE_PIC.addEventListener(
   "change",
   async () => {
-
-    const FUCKING_FILE =
+    const file =
       FUCKING_PROFILE_PIC.files[0];
 
-
-    if (!FUCKING_FILE) {
-
+    if (!file) {
       return;
     }
 
 
-    // Make sure it is an image.
-
-    if (
-      !FUCKING_FILE.type.startsWith(
-        "image/"
-      )
-    ) {
-
+    if (!file.type.startsWith("image/")) {
       showFuckingResult(
         "please select an image",
         "error"
@@ -476,13 +404,10 @@ FUCKING_PROFILE_PIC.addEventListener(
     }
 
 
-    // Maximum 10 MB.
-
     if (
-      FUCKING_FILE.size >
+      file.size >
       10 * 1024 * 1024
     ) {
-
       showFuckingResult(
         "profile picture is too big — keep it under 10 MB",
         "error"
@@ -495,79 +420,196 @@ FUCKING_PROFILE_PIC.addEventListener(
     }
 
 
-    // Remove old object URL.
-
-    if (
-      FUCKING_PROFILE_IMAGE_URL
-    ) {
-
+    if (FUCKING_PROFILE_IMAGE_URL) {
       URL.revokeObjectURL(
         FUCKING_PROFILE_IMAGE_URL
       );
     }
 
 
-    // Create preview.
-
     FUCKING_PROFILE_IMAGE_URL =
-      URL.createObjectURL(
-        FUCKING_FILE
-      );
+      URL.createObjectURL(file);
 
 
     FUCKING_PROFILE_PREVIEW_IMAGE.src =
       FUCKING_PROFILE_IMAGE_URL;
 
 
-    FUCKING_PROFILE_PREVIEW
-      .classList.remove("hidden");
+    FUCKING_PROFILE_PREVIEW.classList.remove(
+      "hidden"
+    );
 
 
     FUCKING_PROFILE_FILE_NAME.textContent =
-      `${FUCKING_FILE.name} (${whatTheFuckIsTheFileSize(
-        FUCKING_FILE.size
+      `${file.name} (${whatTheFuckIsTheFileSize(
+        file.size
       )})`;
 
 
-    FUCKING_PROFILE_FILE_NAME
-      .classList.remove("hidden");
-
-
-    // Permanently save it.
-
-    await saveFuckingProfile();
-
-
-    FUCKING_STATUS.textContent =
-      "profile picture saved";
-
-
-    showFuckingResult(
-      "profile updated",
-      "success"
+    FUCKING_PROFILE_FILE_NAME.classList.remove(
+      "hidden"
     );
+
+
+    try {
+      /*
+       * Save it locally.
+       */
+      await saveFuckingProfile();
+
+
+      /*
+       * Immediately update the actual
+       * Discord webhook profile.
+       */
+      FUCKING_STATUS.textContent =
+        "updating webhook profile";
+
+
+      await changeFuckingWebhookProfile();
+
+
+      FUCKING_STATUS.textContent =
+        "webhook profile updated";
+
+
+      showFuckingResult(
+        "webhook profile updated",
+        "success"
+      );
+
+    } catch (error) {
+      console.error(error);
+
+      showFuckingResult(
+        `could not update webhook profile: ${error.message}`,
+        "error"
+      );
+
+      FUCKING_STATUS.textContent =
+        "profile update failed";
+    }
   }
 );
 
 
-// ========================================
-// MESSAGE IMAGE
-// ========================================
+/* ========================================
+   RESET PROFILE
+   ======================================== */
+
+FUCKING_RESET_PROFILE.addEventListener(
+  "click",
+  async () => {
+
+    try {
+
+      /*
+       * Reset the actual Discord
+       * webhook back to its default
+       * name/avatar.
+       */
+      const response =
+        await fetch(
+          FUCKING_WEBHOOK_URL,
+          {
+            method: "PATCH",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              name: "send msg ig",
+              avatar: null
+            })
+          }
+        );
+
+
+      if (!response.ok) {
+        throw new Error(
+          `Discord returned HTTP ${response.status}`
+        );
+      }
+
+
+      /*
+       * Remove locally saved profile.
+       */
+      localStorage.removeItem(
+        FUCKING_PROFILE_STORAGE_KEY
+      );
+
+
+      FUCKING_USERNAME_INPUT.value =
+        "";
+
+      FUCKING_PROFILE_PIC.value =
+        "";
+
+
+      if (FUCKING_PROFILE_IMAGE_URL) {
+        URL.revokeObjectURL(
+          FUCKING_PROFILE_IMAGE_URL
+        );
+
+        FUCKING_PROFILE_IMAGE_URL =
+          null;
+      }
+
+
+      FUCKING_PROFILE_PREVIEW_IMAGE
+        .removeAttribute("src");
+
+
+      FUCKING_PROFILE_PREVIEW.classList.add(
+        "hidden"
+      );
+
+
+      FUCKING_PROFILE_FILE_NAME.classList.add(
+        "hidden"
+      );
+
+
+      FUCKING_PROFILE_FILE_NAME.textContent =
+        "";
+
+
+      FUCKING_STATUS.textContent =
+        "profile reset";
+
+
+      showFuckingResult(
+        "webhook profile reset",
+        "success"
+      );
+
+    } catch (error) {
+      console.error(error);
+
+      showFuckingResult(
+        `could not reset webhook profile: ${error.message}`,
+        "error"
+      );
+    }
+  }
+);
+
+
+/* ========================================
+   MESSAGE IMAGE
+   ======================================== */
 
 FUCKING_IMAGE.addEventListener(
   "change",
   () => {
-
-    const HOLY_FUCKING_FILE =
+    const file =
       FUCKING_IMAGE.files[0];
 
 
-    // Clean old preview URL.
-
-    if (
-      GODDAMN_PREVIEW_URL
-    ) {
-
+    if (GODDAMN_PREVIEW_URL) {
       URL.revokeObjectURL(
         GODDAMN_PREVIEW_URL
       );
@@ -581,12 +623,14 @@ FUCKING_IMAGE.addEventListener(
       null;
 
 
-    FUCKING_PREVIEW
-      .classList.add("hidden");
+    FUCKING_PREVIEW.classList.add(
+      "hidden"
+    );
 
 
-    FUCKING_FILE_NAME
-      .classList.add("hidden");
+    FUCKING_FILE_NAME.classList.add(
+      "hidden"
+    );
 
 
     FUCKING_PREVIEW_IMAGE
@@ -597,12 +641,7 @@ FUCKING_IMAGE.addEventListener(
       "";
 
 
-    // No image selected.
-
-    if (
-      !HOLY_FUCKING_FILE
-    ) {
-
+    if (!file) {
       FUCKING_STATUS.textContent =
         FUCKING_MESSAGE.value.trim()
           ? "message ready"
@@ -612,14 +651,7 @@ FUCKING_IMAGE.addEventListener(
     }
 
 
-    // Must be image.
-
-    if (
-      !HOLY_FUCKING_FILE.type.startsWith(
-        "image/"
-      )
-    ) {
-
+    if (!file.type.startsWith("image/")) {
       showFuckingResult(
         "go select a fucking image",
         "error"
@@ -632,13 +664,10 @@ FUCKING_IMAGE.addEventListener(
     }
 
 
-    // Maximum 10 MB.
-
     if (
-      HOLY_FUCKING_FILE.size >
+      file.size >
       10 * 1024 * 1024
     ) {
-
       showFuckingResult(
         "image too big — keep it under 10 MB",
         "error"
@@ -652,31 +681,31 @@ FUCKING_IMAGE.addEventListener(
 
 
     HOLY_SHIT_IMAGE =
-      HOLY_FUCKING_FILE;
+      file;
 
 
     FUCKING_FILE_NAME.textContent =
-      `${HOLY_FUCKING_FILE.name} (${whatTheFuckIsTheFileSize(
-        HOLY_FUCKING_FILE.size
+      `${file.name} (${whatTheFuckIsTheFileSize(
+        file.size
       )})`;
 
 
-    FUCKING_FILE_NAME
-      .classList.remove("hidden");
+    FUCKING_FILE_NAME.classList.remove(
+      "hidden"
+    );
 
 
     GODDAMN_PREVIEW_URL =
-      URL.createObjectURL(
-        HOLY_FUCKING_FILE
-      );
+      URL.createObjectURL(file);
 
 
     FUCKING_PREVIEW_IMAGE.src =
       GODDAMN_PREVIEW_URL;
 
 
-    FUCKING_PREVIEW
-      .classList.remove("hidden");
+    FUCKING_PREVIEW.classList.remove(
+      "hidden"
+    );
 
 
     FUCKING_STATUS.textContent =
@@ -685,33 +714,29 @@ FUCKING_IMAGE.addEventListener(
 );
 
 
-// ========================================
-// MESSAGE INPUT
-// ========================================
+/* ========================================
+   MESSAGE COUNTER
+   ======================================== */
 
 FUCKING_MESSAGE.addEventListener(
   "input",
   () => {
-
     updateFuckingCharacterCount();
 
 
     if (
       FUCKING_MESSAGE.value.trim()
     ) {
-
       FUCKING_STATUS.textContent =
         "message ready";
 
     } else if (
       HOLY_SHIT_IMAGE
     ) {
-
       FUCKING_STATUS.textContent =
         "image ready";
 
     } else {
-
       FUCKING_STATUS.textContent =
         "ready";
     }
@@ -719,9 +744,9 @@ FUCKING_MESSAGE.addEventListener(
 );
 
 
-// ========================================
-// SUBMIT
-// ========================================
+/* ========================================
+   SEND
+   ======================================== */
 
 FUCKING_FORM.addEventListener(
   "submit",
@@ -730,27 +755,21 @@ FUCKING_FORM.addEventListener(
     event.preventDefault();
 
 
-    const FUCKING_TEXT =
+    const text =
       FUCKING_MESSAGE.value.trim();
 
 
-    const FUCKING_USERNAME =
+    const username =
       FUCKING_USERNAME_INPUT.value.trim();
 
 
     /*
-      IMPORTANT:
-
-      Message OR image is enough.
-
-      Both empty = reject.
-    */
-
+     * Message OR image is enough.
+     */
     if (
-      !FUCKING_TEXT &&
+      !text &&
       !HOLY_SHIT_IMAGE
     ) {
-
       showFuckingResult(
         "add a message or image",
         "error"
@@ -763,12 +782,7 @@ FUCKING_FORM.addEventListener(
     }
 
 
-    // Maximum 2000 characters.
-
-    if (
-      FUCKING_TEXT.length > 2000
-    ) {
-
+    if (text.length > 2000) {
       showFuckingResult(
         "your message is too long — keep it under 2000 characters",
         "error"
@@ -778,18 +792,11 @@ FUCKING_FORM.addEventListener(
     }
 
 
-    // Save profile before sending.
-
-    await saveFuckingProfile();
-
-
-    // Loading state.
-
     fuckingSetLoading(true);
 
 
     FUCKING_STATUS.textContent =
-      "sending shit";
+      "updating profile";
 
 
     FUCKING_RESULT.classList.add(
@@ -799,73 +806,48 @@ FUCKING_FORM.addEventListener(
 
     try {
 
-      const FUCKING_FORM_DATA =
+      /*
+       * Make sure the selected profile
+       * is the Discord webhook profile.
+       */
+      await changeFuckingWebhookProfile();
+
+
+      FUCKING_STATUS.textContent =
+        "sending shit";
+
+
+      /*
+       * Build Discord multipart request.
+       */
+      const formData =
         new FormData();
 
 
-      const FUCKING_PAYLOAD = {};
+      const payload = {};
 
 
-      // --------------------------------
-      // Message
-      // --------------------------------
-
-      if (
-        FUCKING_TEXT
-      ) {
-
-        FUCKING_PAYLOAD.content =
-          FUCKING_TEXT;
-      }
-
-
-      // --------------------------------
-      // Profile name
-      // --------------------------------
-
-      if (
-        FUCKING_USERNAME
-      ) {
-
-        FUCKING_PAYLOAD.username =
-          FUCKING_USERNAME;
+      if (text) {
+        payload.content =
+          text;
       }
 
 
       /*
-        We intentionally DON'T put the
-        local profile image into avatar_url.
-
-        Discord cannot use a browser
-        localStorage data URL as a normal
-        hosted avatar URL.
-      */
+       * We DON'T need username/avatar_url
+       * here because the actual webhook
+       * profile was already changed above.
+       */
 
 
-      // --------------------------------
-      // Payload
-      // --------------------------------
-
-      FUCKING_FORM_DATA.append(
+      formData.append(
         "payload_json",
-        JSON.stringify(
-          FUCKING_PAYLOAD
-        )
+        JSON.stringify(payload)
       );
 
 
-      // --------------------------------
-      // Message image
-      //
-      // This works even if there is
-      // NO message.
-      // --------------------------------
-
-      if (
-        HOLY_SHIT_IMAGE
-      ) {
-
-        FUCKING_FORM_DATA.append(
+      if (HOLY_SHIT_IMAGE) {
+        formData.append(
           "files[0]",
           HOLY_SHIT_IMAGE,
           HOLY_SHIT_IMAGE.name
@@ -873,60 +855,41 @@ FUCKING_FORM.addEventListener(
       }
 
 
-      // --------------------------------
-      // SEND
-      // --------------------------------
-
-      const FUCKING_RESPONSE =
+      const response =
         await fetch(
           FUCKING_WEBHOOK_URL,
           {
             method: "POST",
-            body: FUCKING_FORM_DATA
+            body: formData
           }
         );
 
 
-      // --------------------------------
-      // Discord error
-      // --------------------------------
+      if (!response.ok) {
 
-      if (
-        !FUCKING_RESPONSE.ok
-      ) {
-
-        let FUCKING_ERROR =
-          `Discord said no — HTTP ${FUCKING_RESPONSE.status}.`;
+        let errorMessage =
+          `Discord returned HTTP ${response.status}.`;
 
 
         try {
+          const data =
+            await response.json();
 
-          const FUCKING_DATA =
-            await FUCKING_RESPONSE.json();
-
-
-          if (
-            FUCKING_DATA.message
-          ) {
-
-            FUCKING_ERROR +=
-              ` ${FUCKING_DATA.message}`;
+          if (data.message) {
+            errorMessage +=
+              ` ${data.message}`;
           }
 
         } catch {
-          // Not JSON.
+          // Nothing to parse.
         }
 
 
         throw new Error(
-          FUCKING_ERROR
+          errorMessage
         );
       }
 
-
-      // =================================
-      // SUCCESS
-      // =================================
 
       showFuckingResult(
         "msg sent wow",
@@ -939,33 +902,23 @@ FUCKING_FORM.addEventListener(
 
 
       /*
-        IMPORTANT:
-
-        We ONLY clear the message and
-        message image.
-
-        PROFILE STAYS.
-      */
-
+       * Clear ONLY the message.
+       *
+       * Profile stays saved and the
+       * Discord webhook keeps its profile.
+       */
 
       FUCKING_MESSAGE.value =
         "";
 
-
       FUCKING_IMAGE.value =
         "";
-
 
       HOLY_SHIT_IMAGE =
         null;
 
 
-      // Clean message image preview.
-
-      if (
-        GODDAMN_PREVIEW_URL
-      ) {
-
+      if (GODDAMN_PREVIEW_URL) {
         URL.revokeObjectURL(
           GODDAMN_PREVIEW_URL
         );
@@ -979,43 +932,33 @@ FUCKING_FORM.addEventListener(
         .removeAttribute("src");
 
 
-      FUCKING_PREVIEW
-        .classList.add("hidden");
+      FUCKING_PREVIEW.classList.add(
+        "hidden"
+      );
 
 
-      FUCKING_FILE_NAME
-        .classList.add("hidden");
+      FUCKING_FILE_NAME.classList.add(
+        "hidden"
+      );
 
 
       FUCKING_FILE_NAME.textContent =
         "";
 
 
-      // Character counter.
-
       updateFuckingCharacterCount();
 
 
-      /*
-        Re-load profile preview just
-        in case anything changed.
-      */
-
-      loadFuckingProfile();
-
-
-    } catch (
-      FUCKING_ERROR
-    ) {
+    } catch (error) {
 
       console.error(
         "something broke:",
-        FUCKING_ERROR
+        error
       );
 
 
       showFuckingResult(
-        `could not send the fucking thing: ${FUCKING_ERROR.message}`,
+        `could not send the fucking thing: ${error.message}`,
         "error"
       );
 
@@ -1023,20 +966,18 @@ FUCKING_FORM.addEventListener(
       FUCKING_STATUS.textContent =
         "failed boohoo";
 
-
     } finally {
 
-      fuckingSetLoading(
-        false
-      );
+      fuckingSetLoading(false);
+
     }
   }
 );
 
 
-// ========================================
-// INITIALIZE
-// ========================================
+/* ========================================
+   START
+   ======================================== */
 
 loadFuckingProfile();
 
