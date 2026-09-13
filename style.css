@@ -237,3 +237,77 @@ button:disabled {
     padding: 20px;
   }
 }
+
+```css
+/* ================================
+   PROFILE
+   ================================ */
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 4px;
+  padding-bottom: 2px;
+}
+
+.profile-title {
+  color: #eeeeee;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.profile-subtitle {
+  margin-top: 4px;
+  color: #555555;
+  font-size: 11px;
+}
+
+.reset-button {
+  width: auto;
+  height: 32px;
+  margin-top: 0;
+  padding: 0 12px;
+
+  border: 1px solid #353535;
+  background: #101010;
+  color: #999999;
+
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.reset-button:hover {
+  background: #eeeeee;
+  border-color: #eeeeee;
+  color: #111111;
+}
+
+.reset-button:active {
+  background: #bbbbbb;
+}
+
+.profile-help {
+  margin-top: 6px;
+  color: #555555;
+  font-size: 10px;
+}
+
+
+/* ================================
+   MOBILE
+   ================================ */
+
+@media (max-width: 600px) {
+
+  .profile-header {
+    align-items: flex-start;
+  }
+
+  .reset-button {
+    flex-shrink: 0;
+  }
+
+}
