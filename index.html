@@ -1,27 +1,61 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>send msg ig</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
   <main class="app">
+
     <section class="card">
 
       <div class="header">
+
         <div class="logo">w</div>
 
         <div>
           <h1>send msg ig</h1>
           <p>ITS FUCKING SELF EXPLANATORY</p>
         </div>
+
       </div>
 
+
       <form id="messageForm">
+
+
+        <!-- PROFILE -->
+
+        <div class="profile-header">
+
+          <div>
+            <div class="profile-title">
+              profile
+            </div>
+
+            <div class="profile-subtitle">
+              this stays saved until you reset it
+            </div>
+          </div>
+
+          <button
+            id="resetProfile"
+            type="button"
+            class="reset-button"
+          >
+            reset profile
+          </button>
+
+        </div>
+
 
         <label for="username">
           name <span>optional</span>
@@ -32,10 +66,30 @@
           type="text"
           maxlength="80"
           placeholder="type a name"
+          autocomplete="off"
         >
 
+
+        <label for="profilePic">
+          profile picture URL <span>optional</span>
+        </label>
+
+        <input
+          id="profilePic"
+          type="url"
+          placeholder="https://example.com/avatar.png"
+          autocomplete="off"
+        >
+
+        <div class="profile-help">
+          profile picture must be a public image URL
+        </div>
+
+
+        <!-- MESSAGE -->
+
         <label for="message">
-          message
+          message <span>optional</span>
         </label>
 
         <textarea
@@ -43,13 +97,23 @@
           rows="7"
           maxlength="2000"
           placeholder="say something..."
-          required
         ></textarea>
 
+
         <div class="counter">
-          <span id="status">ready</span>
-          <span><b id="charCount">0</b>/2000</span>
+
+          <span id="status">
+            ready
+          </span>
+
+          <span>
+            <b id="charCount">0</b>/2000
+          </span>
+
         </div>
+
+
+        <!-- IMAGE -->
 
         <label for="image">
           image <span>optional</span>
@@ -61,25 +125,62 @@
           accept="image/*"
         >
 
-        <div id="fileName" class="file-name hidden"></div>
 
-        <div id="preview" class="image-preview hidden">
-          <img id="previewImage" alt="Selected image preview">
+        <div
+          id="fileName"
+          class="file-name hidden"
+        ></div>
+
+
+        <div
+          id="preview"
+          class="image-preview hidden"
+        >
+
+          <img
+            id="previewImage"
+            alt="Selected image preview"
+          >
+
         </div>
 
-        <button id="sendButton" type="submit">
-          <span id="buttonText">send msg ig</span>
-          <span id="spinner" class="spinner hidden"></span>
+
+        <!-- SEND -->
+
+        <button
+          id="sendButton"
+          type="submit"
+        >
+
+          <span id="buttonText">
+            send msg ig
+          </span>
+
+          <span
+            id="spinner"
+            class="spinner hidden"
+          ></span>
+
         </button>
+
 
       </form>
 
-      <div id="result" class="result hidden"></div>
+
+      <div
+        id="result"
+        class="result hidden"
+      ></div>
+
 
     </section>
+
   </main>
+
 
   <script src="script.js"></script>
 
 </body>
+
 </html>
+```
