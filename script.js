@@ -1,6 +1,11 @@
 const FUCKING_WEBHOOK_URL =
   "https://discord.com/api/webhooks/1541638515077685288/WY-isvl6ymHdmcbc-4HqzSNZN1qnp4eFlivtcxTnZamstDXkp7oqCeMBvS_l_ViAP9vQ";
 
+
+// ========================================
+// ELEMENTS
+// ========================================
+
 const FUCKING_FORM =
   document.getElementById("messageForm");
 
@@ -15,6 +20,15 @@ const FUCKING_IMAGE =
 
 const FUCKING_PROFILE_PIC =
   document.getElementById("profilePic");
+
+const FUCKING_PROFILE_PREVIEW =
+  document.getElementById("profilePreview");
+
+const FUCKING_PROFILE_PREVIEW_IMAGE =
+  document.getElementById("profilePreviewImage");
+
+const FUCKING_PROFILE_FILE_NAME =
+  document.getElementById("profileFileName");
 
 const FUCKING_RESET_PROFILE =
   document.getElementById("resetProfile");
@@ -46,120 +60,24 @@ const FUCKING_PREVIEW_IMAGE =
 const FUCKING_FILE_NAME =
   document.getElementById("fileName");
 
+
+// ========================================
+// VARIABLES
+// ========================================
+
 let HOLY_SHIT_IMAGE = null;
+
 let GODDAMN_PREVIEW_URL = null;
 
+let FUCKING_PROFILE_IMAGE_URL = null;
+
 
 // ========================================
-// PROFILE
+// STORAGE KEY
 // ========================================
 
-const PROFILE_STORAGE_KEY = "discordWebhookProfile";
-
-const DEFAULT_PROFILE = {
-  username: "",
-  avatar: ""
-};
-
-
-function loadFuckingProfile() {
-  try {
-    const saved =
-      localStorage.getItem(PROFILE_STORAGE_KEY);
-
-    if (!saved) {
-      return DEFAULT_PROFILE;
-    }
-
-    const profile = JSON.parse(saved);
-
-    return {
-      username:
-        typeof profile.username === "string"
-          ? profile.username
-          : "",
-      avatar:
-        typeof profile.avatar === "string"
-          ? profile.avatar
-          : ""
-    };
-
-  } catch {
-    return DEFAULT_PROFILE;
-  }
-}
-
-
-function saveFuckingProfile() {
-  const profile = {
-    username:
-      FUCKING_USERNAME_INPUT.value.trim(),
-
-    avatar:
-      FUCKING_PROFILE_PIC.value.trim()
-  };
-
-  localStorage.setItem(
-    PROFILE_STORAGE_KEY,
-    JSON.stringify(profile)
-  );
-}
-
-
-function applyFuckingProfile() {
-  const profile =
-    loadFuckingProfile();
-
-  FUCKING_USERNAME_INPUT.value =
-    profile.username;
-
-  FUCKING_PROFILE_PIC.value =
-    profile.avatar;
-}
-
-
-function resetFuckingProfile() {
-  localStorage.removeItem(
-    PROFILE_STORAGE_KEY
-  );
-
-  FUCKING_USERNAME_INPUT.value = "";
-  FUCKING_PROFILE_PIC.value = "";
-
-  FUCKING_STATUS.textContent =
-    "profile reset";
-
-  showFuckingResult(
-    "profile reset back to normal",
-    "success"
-  );
-}
-
-
-// Save profile whenever either profile field changes.
-
-FUCKING_USERNAME_INPUT.addEventListener(
-  "input",
-  saveFuckingProfile
-);
-
-FUCKING_PROFILE_PIC.addEventListener(
-  "input",
-  saveFuckingProfile
-);
-
-
-// Reset profile button.
-
-FUCKING_RESET_PROFILE.addEventListener(
-  "click",
-  resetFuckingProfile
-);
-
-
-// Load saved profile when page opens.
-
-applyFuckingProfile();
+const FUCKING_PROFILE_STORAGE_KEY =
+  "sendMsgIgProfile";
 
 
 // ========================================
@@ -167,19 +85,21 @@ applyFuckingProfile();
 // ========================================
 
 function updateFuckingCharacterCount() {
+
   FUCKING_CHAR_COUNT.textContent =
     FUCKING_MESSAGE.value.length;
 }
 
 
 // ========================================
-// RESULT
+// RESULT MESSAGE
 // ========================================
 
 function showFuckingResult(
   message,
   type
 ) {
+
   FUCKING_RESULT.textContent =
     message;
 
@@ -193,12 +113,13 @@ function showFuckingResult(
 
 
 // ========================================
-// LOADING
+// LOADING STATE
 // ========================================
 
 function fuckingSetLoading(
   loading
 ) {
+
   FUCKING_SEND_BUTTON.disabled =
     loading;
 
@@ -221,11 +142,16 @@ function fuckingSetLoading(
 function whatTheFuckIsTheFileSize(
   bytes
 ) {
+
   if (bytes < 1024) {
     return `${bytes} B`;
   }
 
-  if (bytes < 1024 * 1024) {
+  if (
+    bytes <
+    1024 * 1024
+  ) {
+
     return `${(
       bytes / 1024
     ).toFixed(1)} KB`;
@@ -239,7 +165,393 @@ function whatTheFuckIsTheFileSize(
 
 
 // ========================================
-// IMAGE SELECT
+// READ FILE AS DATA URL
+// ========================================
+
+function fuckingReadFileAsDataURL(
+  file
+) {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const FUCKING_READER =
+        new FileReader();
+
+      FUCKING_READER.onload = () => {
+        resolve(
+          FUCKING_READER.result
+        );
+      };
+
+      FUCKING_READER.onerror = () => {
+        reject(
+          new Error(
+            "could not read the profile picture"
+          )
+        );
+      };
+
+      FUCKING_READER.readAsDataURL(
+        file
+      );
+    }
+  );
+}
+
+
+// ========================================
+// SAVE PROFILE
+// ========================================
+
+async function saveFuckingProfile() {
+
+  const FUCKING_USERNAME =
+    FUCKING_USERNAME_INPUT.value.trim();
+
+  let FUCKING_AVATAR =
+    null;
+
+
+  /*
+    If the profile picture was changed,
+    convert it to a data URL so it can
+    survive page refreshes.
+  */
+
+  if (
+    FUCKING_PROFILE_PIC.files &&
+    FUCKING_PROFILE_PIC.files[0]
+  ) {
+
+    try {
+
+      FUCKING_AVATAR =
+        await fuckingReadFileAsDataURL(
+          FUCKING_PROFILE_PIC.files[0]
+        );
+
+    } catch (FUCKING_ERROR) {
+
+      console.error(
+        FUCKING_ERROR
+      );
+
+      return;
+    }
+
+  } else {
+
+    /*
+      If no new file was selected,
+      keep the existing saved avatar.
+    */
+
+    const FUCKING_EXISTING =
+      localStorage.getItem(
+        FUCKING_PROFILE_STORAGE_KEY
+      );
+
+    if (FUCKING_EXISTING) {
+
+      try {
+
+        const FUCKING_PROFILE =
+          JSON.parse(
+            FUCKING_EXISTING
+          );
+
+        FUCKING_AVATAR =
+          FUCKING_PROFILE.avatar || null;
+
+      } catch {
+        FUCKING_AVATAR = null;
+      }
+    }
+  }
+
+
+  const FUCKING_PROFILE = {
+
+    username:
+      FUCKING_USERNAME,
+
+    avatar:
+      FUCKING_AVATAR
+  };
+
+
+  localStorage.setItem(
+    FUCKING_PROFILE_STORAGE_KEY,
+    JSON.stringify(
+      FUCKING_PROFILE
+    )
+  );
+}
+
+
+// ========================================
+// LOAD PROFILE
+// ========================================
+
+function loadFuckingProfile() {
+
+  const FUCKING_SAVED_PROFILE =
+    localStorage.getItem(
+      FUCKING_PROFILE_STORAGE_KEY
+    );
+
+
+  if (
+    !FUCKING_SAVED_PROFILE
+  ) {
+
+    return;
+  }
+
+
+  try {
+
+    const FUCKING_PROFILE =
+      JSON.parse(
+        FUCKING_SAVED_PROFILE
+      );
+
+
+    // Restore username.
+
+    FUCKING_USERNAME_INPUT.value =
+      FUCKING_PROFILE.username || "";
+
+
+    // Restore profile picture.
+
+    if (
+      FUCKING_PROFILE.avatar
+    ) {
+
+      FUCKING_PROFILE_PREVIEW_IMAGE.src =
+        FUCKING_PROFILE.avatar;
+
+      FUCKING_PROFILE_PREVIEW.classList.remove(
+        "hidden"
+      );
+
+      FUCKING_PROFILE_FILE_NAME.textContent =
+        "saved profile picture";
+
+      FUCKING_PROFILE_FILE_NAME.classList.remove(
+        "hidden"
+      );
+    }
+
+  } catch (
+    FUCKING_ERROR
+  ) {
+
+    console.error(
+      "Could not load profile:",
+      FUCKING_ERROR
+    );
+
+    localStorage.removeItem(
+      FUCKING_PROFILE_STORAGE_KEY
+    );
+  }
+}
+
+
+// ========================================
+// RESET PROFILE
+// ========================================
+
+FUCKING_RESET_PROFILE.addEventListener(
+  "click",
+  () => {
+
+    localStorage.removeItem(
+      FUCKING_PROFILE_STORAGE_KEY
+    );
+
+
+    FUCKING_USERNAME_INPUT.value =
+      "";
+
+    FUCKING_PROFILE_PIC.value =
+      "";
+
+
+    if (
+      FUCKING_PROFILE_IMAGE_URL
+    ) {
+
+      URL.revokeObjectURL(
+        FUCKING_PROFILE_IMAGE_URL
+      );
+
+      FUCKING_PROFILE_IMAGE_URL =
+        null;
+    }
+
+
+    FUCKING_PROFILE_PREVIEW_IMAGE
+      .removeAttribute("src");
+
+
+    FUCKING_PROFILE_PREVIEW
+      .classList.add("hidden");
+
+
+    FUCKING_PROFILE_FILE_NAME
+      .classList.add("hidden");
+
+
+    FUCKING_PROFILE_FILE_NAME.textContent =
+      "";
+
+
+    FUCKING_STATUS.textContent =
+      "profile reset";
+
+
+    showFuckingResult(
+      "profile reset back to normal",
+      "success"
+    );
+  }
+);
+
+
+// ========================================
+// PROFILE NAME CHANGE
+// ========================================
+
+FUCKING_USERNAME_INPUT.addEventListener(
+  "input",
+  async () => {
+
+    await saveFuckingProfile();
+
+    FUCKING_STATUS.textContent =
+      "profile saved";
+  }
+);
+
+
+// ========================================
+// PROFILE PICTURE CHANGE
+// ========================================
+
+FUCKING_PROFILE_PIC.addEventListener(
+  "change",
+  async () => {
+
+    const FUCKING_FILE =
+      FUCKING_PROFILE_PIC.files[0];
+
+
+    if (!FUCKING_FILE) {
+
+      return;
+    }
+
+
+    // Make sure it is an image.
+
+    if (
+      !FUCKING_FILE.type.startsWith(
+        "image/"
+      )
+    ) {
+
+      showFuckingResult(
+        "please select an image",
+        "error"
+      );
+
+      FUCKING_PROFILE_PIC.value =
+        "";
+
+      return;
+    }
+
+
+    // Maximum 10 MB.
+
+    if (
+      FUCKING_FILE.size >
+      10 * 1024 * 1024
+    ) {
+
+      showFuckingResult(
+        "profile picture is too big — keep it under 10 MB",
+        "error"
+      );
+
+      FUCKING_PROFILE_PIC.value =
+        "";
+
+      return;
+    }
+
+
+    // Remove old object URL.
+
+    if (
+      FUCKING_PROFILE_IMAGE_URL
+    ) {
+
+      URL.revokeObjectURL(
+        FUCKING_PROFILE_IMAGE_URL
+      );
+    }
+
+
+    // Create preview.
+
+    FUCKING_PROFILE_IMAGE_URL =
+      URL.createObjectURL(
+        FUCKING_FILE
+      );
+
+
+    FUCKING_PROFILE_PREVIEW_IMAGE.src =
+      FUCKING_PROFILE_IMAGE_URL;
+
+
+    FUCKING_PROFILE_PREVIEW
+      .classList.remove("hidden");
+
+
+    FUCKING_PROFILE_FILE_NAME.textContent =
+      `${FUCKING_FILE.name} (${whatTheFuckIsTheFileSize(
+        FUCKING_FILE.size
+      )})`;
+
+
+    FUCKING_PROFILE_FILE_NAME
+      .classList.remove("hidden");
+
+
+    // Permanently save it.
+
+    await saveFuckingProfile();
+
+
+    FUCKING_STATUS.textContent =
+      "profile picture saved";
+
+
+    showFuckingResult(
+      "profile updated",
+      "success"
+    );
+  }
+);
+
+
+// ========================================
+// MESSAGE IMAGE
 // ========================================
 
 FUCKING_IMAGE.addEventListener(
@@ -250,37 +562,46 @@ FUCKING_IMAGE.addEventListener(
       FUCKING_IMAGE.files[0];
 
 
-    // Clean up old preview URL.
+    // Clean old preview URL.
 
-    if (GODDAMN_PREVIEW_URL) {
+    if (
+      GODDAMN_PREVIEW_URL
+    ) {
+
       URL.revokeObjectURL(
         GODDAMN_PREVIEW_URL
       );
 
-      GODDAMN_PREVIEW_URL = null;
+      GODDAMN_PREVIEW_URL =
+        null;
     }
 
 
-    HOLY_SHIT_IMAGE = null;
+    HOLY_SHIT_IMAGE =
+      null;
 
-    FUCKING_PREVIEW.classList.add(
-      "hidden"
-    );
 
-    FUCKING_FILE_NAME.classList.add(
-      "hidden"
-    );
+    FUCKING_PREVIEW
+      .classList.add("hidden");
 
-    FUCKING_PREVIEW_IMAGE.removeAttribute(
-      "src"
-    );
 
-    FUCKING_FILE_NAME.textContent = "";
+    FUCKING_FILE_NAME
+      .classList.add("hidden");
+
+
+    FUCKING_PREVIEW_IMAGE
+      .removeAttribute("src");
+
+
+    FUCKING_FILE_NAME.textContent =
+      "";
 
 
     // No image selected.
 
-    if (!HOLY_FUCKING_FILE) {
+    if (
+      !HOLY_FUCKING_FILE
+    ) {
 
       FUCKING_STATUS.textContent =
         FUCKING_MESSAGE.value.trim()
@@ -291,7 +612,7 @@ FUCKING_IMAGE.addEventListener(
     }
 
 
-    // Only allow images.
+    // Must be image.
 
     if (
       !HOLY_FUCKING_FILE.type.startsWith(
@@ -300,17 +621,18 @@ FUCKING_IMAGE.addEventListener(
     ) {
 
       showFuckingResult(
-        "please select an image",
+        "go select a fucking image",
         "error"
       );
 
-      FUCKING_IMAGE.value = "";
+      FUCKING_IMAGE.value =
+        "";
 
       return;
     }
 
 
-    // 10 MB limit.
+    // Maximum 10 MB.
 
     if (
       HOLY_FUCKING_FILE.size >
@@ -318,11 +640,12 @@ FUCKING_IMAGE.addEventListener(
     ) {
 
       showFuckingResult(
-        "image is too large — keep it under 10 MB",
+        "image too big — keep it under 10 MB",
         "error"
       );
 
-      FUCKING_IMAGE.value = "";
+      FUCKING_IMAGE.value =
+        "";
 
       return;
     }
@@ -337,9 +660,9 @@ FUCKING_IMAGE.addEventListener(
         HOLY_FUCKING_FILE.size
       )})`;
 
-    FUCKING_FILE_NAME.classList.remove(
-      "hidden"
-    );
+
+    FUCKING_FILE_NAME
+      .classList.remove("hidden");
 
 
     GODDAMN_PREVIEW_URL =
@@ -347,12 +670,13 @@ FUCKING_IMAGE.addEventListener(
         HOLY_FUCKING_FILE
       );
 
+
     FUCKING_PREVIEW_IMAGE.src =
       GODDAMN_PREVIEW_URL;
 
-    FUCKING_PREVIEW.classList.remove(
-      "hidden"
-    );
+
+    FUCKING_PREVIEW
+      .classList.remove("hidden");
 
 
     FUCKING_STATUS.textContent =
@@ -370,6 +694,7 @@ FUCKING_MESSAGE.addEventListener(
   () => {
 
     updateFuckingCharacterCount();
+
 
     if (
       FUCKING_MESSAGE.value.trim()
@@ -408,16 +733,18 @@ FUCKING_FORM.addEventListener(
     const FUCKING_TEXT =
       FUCKING_MESSAGE.value.trim();
 
+
     const FUCKING_USERNAME =
       FUCKING_USERNAME_INPUT.value.trim();
 
-    const FUCKING_AVATAR =
-      FUCKING_PROFILE_PIC.value.trim();
 
+    /*
+      IMPORTANT:
 
-    // ------------------------------------
-    // Message OR image is required.
-    // ------------------------------------
+      Message OR image is enough.
+
+      Both empty = reject.
+    */
 
     if (
       !FUCKING_TEXT &&
@@ -425,7 +752,7 @@ FUCKING_FORM.addEventListener(
     ) {
 
       showFuckingResult(
-        "add a message or an image",
+        "add a message or image",
         "error"
       );
 
@@ -436,9 +763,7 @@ FUCKING_FORM.addEventListener(
     }
 
 
-    // ------------------------------------
-    // Message max length.
-    // ------------------------------------
+    // Maximum 2000 characters.
 
     if (
       FUCKING_TEXT.length > 2000
@@ -453,20 +778,19 @@ FUCKING_FORM.addEventListener(
     }
 
 
-    // ------------------------------------
-    // Save profile BEFORE sending.
-    //
-    // This means the profile survives
-    // after the message is sent.
-    // ------------------------------------
+    // Save profile before sending.
 
-    saveFuckingProfile();
+    await saveFuckingProfile();
 
+
+    // Loading state.
 
     fuckingSetLoading(true);
 
+
     FUCKING_STATUS.textContent =
-      "sending...";
+      "sending shit";
+
 
     FUCKING_RESULT.classList.add(
       "hidden"
@@ -478,44 +802,49 @@ FUCKING_FORM.addEventListener(
       const FUCKING_FORM_DATA =
         new FormData();
 
+
       const FUCKING_PAYLOAD = {};
 
 
-      // ----------------------------------
-      // Add message if one exists.
-      // ----------------------------------
+      // --------------------------------
+      // Message
+      // --------------------------------
 
-      if (FUCKING_TEXT) {
+      if (
+        FUCKING_TEXT
+      ) {
 
         FUCKING_PAYLOAD.content =
           FUCKING_TEXT;
       }
 
 
-      // ----------------------------------
-      // Add custom username if provided.
-      // ----------------------------------
+      // --------------------------------
+      // Profile name
+      // --------------------------------
 
-      if (FUCKING_USERNAME) {
+      if (
+        FUCKING_USERNAME
+      ) {
 
         FUCKING_PAYLOAD.username =
           FUCKING_USERNAME;
       }
 
 
-      // ----------------------------------
-      // Add profile picture if provided.
-      //
-      // Discord requires this to be a
-      // publicly accessible image URL.
-      // ----------------------------------
+      /*
+        We intentionally DON'T put the
+        local profile image into avatar_url.
 
-      if (FUCKING_AVATAR) {
+        Discord cannot use a browser
+        localStorage data URL as a normal
+        hosted avatar URL.
+      */
 
-        FUCKING_PAYLOAD.avatar_url =
-          FUCKING_AVATAR;
-      }
 
+      // --------------------------------
+      // Payload
+      // --------------------------------
 
       FUCKING_FORM_DATA.append(
         "payload_json",
@@ -525,14 +854,16 @@ FUCKING_FORM.addEventListener(
       );
 
 
-      // ----------------------------------
-      // Add image if one exists.
+      // --------------------------------
+      // Message image
       //
-      // This works even when there is
+      // This works even if there is
       // NO message.
-      // ----------------------------------
+      // --------------------------------
 
-      if (HOLY_SHIT_IMAGE) {
+      if (
+        HOLY_SHIT_IMAGE
+      ) {
 
         FUCKING_FORM_DATA.append(
           "files[0]",
@@ -542,9 +873,9 @@ FUCKING_FORM.addEventListener(
       }
 
 
-      // ----------------------------------
-      // Send to Discord.
-      // ----------------------------------
+      // --------------------------------
+      // SEND
+      // --------------------------------
 
       const FUCKING_RESPONSE =
         await fetch(
@@ -556,15 +887,23 @@ FUCKING_FORM.addEventListener(
         );
 
 
-      if (!FUCKING_RESPONSE.ok) {
+      // --------------------------------
+      // Discord error
+      // --------------------------------
+
+      if (
+        !FUCKING_RESPONSE.ok
+      ) {
 
         let FUCKING_ERROR =
-          `Discord returned HTTP ${FUCKING_RESPONSE.status}.`;
+          `Discord said no — HTTP ${FUCKING_RESPONSE.status}.`;
+
 
         try {
 
           const FUCKING_DATA =
             await FUCKING_RESPONSE.json();
+
 
           if (
             FUCKING_DATA.message
@@ -575,8 +914,9 @@ FUCKING_FORM.addEventListener(
           }
 
         } catch {
-          // Response wasn't JSON.
+          // Not JSON.
         }
+
 
         throw new Error(
           FUCKING_ERROR
@@ -584,43 +924,43 @@ FUCKING_FORM.addEventListener(
       }
 
 
-      // ==================================
+      // =================================
       // SUCCESS
-      // ==================================
+      // =================================
 
       showFuckingResult(
-        "message sent",
+        "msg sent wow",
         "success"
       );
 
+
       FUCKING_STATUS.textContent =
-        "sent";
+        "sent somehow ig";
 
 
-      // ----------------------------------
-      // IMPORTANT:
-      //
-      // We DO NOT reset:
-      // - username
-      // - profile picture
-      //
-      // They stay saved.
-      // ----------------------------------
+      /*
+        IMPORTANT:
+
+        We ONLY clear the message and
+        message image.
+
+        PROFILE STAYS.
+      */
 
 
-      // Clear message.
-
-      FUCKING_MESSAGE.value = "";
-
-
-      // Clear selected message image.
-
-      FUCKING_IMAGE.value = "";
-
-      HOLY_SHIT_IMAGE = null;
+      FUCKING_MESSAGE.value =
+        "";
 
 
-      // Clean preview URL.
+      FUCKING_IMAGE.value =
+        "";
+
+
+      HOLY_SHIT_IMAGE =
+        null;
+
+
+      // Clean message image preview.
 
       if (
         GODDAMN_PREVIEW_URL
@@ -638,40 +978,66 @@ FUCKING_FORM.addEventListener(
       FUCKING_PREVIEW_IMAGE
         .removeAttribute("src");
 
+
       FUCKING_PREVIEW
         .classList.add("hidden");
 
+
       FUCKING_FILE_NAME
         .classList.add("hidden");
+
 
       FUCKING_FILE_NAME.textContent =
         "";
 
 
+      // Character counter.
+
       updateFuckingCharacterCount();
+
+
+      /*
+        Re-load profile preview just
+        in case anything changed.
+      */
+
+      loadFuckingProfile();
+
 
     } catch (
       FUCKING_ERROR
     ) {
 
       console.error(
-        "Something broke:",
+        "something broke:",
         FUCKING_ERROR
       );
 
+
       showFuckingResult(
-        `could not send it: ${FUCKING_ERROR.message}`,
+        `could not send the fucking thing: ${FUCKING_ERROR.message}`,
         "error"
       );
 
+
       FUCKING_STATUS.textContent =
-        "failed";
+        "failed boohoo";
+
 
     } finally {
 
-      fuckingSetLoading(false);
+      fuckingSetLoading(
+        false
+      );
     }
   }
 );
+
+
+// ========================================
+// INITIALIZE
+// ========================================
+
+loadFuckingProfile();
 
 updateFuckingCharacterCount();
