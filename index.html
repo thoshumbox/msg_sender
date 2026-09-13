@@ -3,11 +3,17 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>send msg ig</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 </head>
 
 <body>
@@ -16,13 +22,22 @@
 
     <section class="card">
 
+      <!-- HEADER -->
+
       <div class="header">
 
-        <div class="logo">w</div>
+        <div class="logo">
+          w
+        </div>
 
         <div>
-          <h1>send msg ig</h1>
-          <p>ITS FUCKING SELF EXPLANATORY</p>
+          <h1>
+            send msg ig
+          </h1>
+
+          <p>
+            ITS FUCKING SELF EXPLANATORY
+          </p>
         </div>
 
       </div>
@@ -36,14 +51,17 @@
         <div class="profile-header">
 
           <div>
+
             <div class="profile-title">
               profile
             </div>
 
             <div class="profile-subtitle">
-              this stays saved until you reset it
+              your profile stays saved
             </div>
+
           </div>
+
 
           <button
             id="resetProfile"
@@ -56,8 +74,11 @@
         </div>
 
 
+        <!-- NAME -->
+
         <label for="username">
-          name <span>optional</span>
+          name
+          <span>optional</span>
         </label>
 
         <input
@@ -69,26 +90,44 @@
         >
 
 
+        <!-- PROFILE PICTURE -->
+
         <label for="profilePic">
-          profile picture URL <span>optional</span>
+          profile picture
+          <span>optional</span>
         </label>
 
         <input
           id="profilePic"
-          type="url"
-          placeholder="https://example.com/avatar.png"
-          autocomplete="off"
+          type="file"
+          accept="image/*"
         >
 
-        <div class="profile-help">
-          profile picture must be a public image URL
+
+        <div
+          id="profileFileName"
+          class="file-name hidden"
+        ></div>
+
+
+        <div
+          id="profilePreview"
+          class="profile-preview hidden"
+        >
+
+          <img
+            id="profilePreviewImage"
+            alt="Profile picture preview"
+          >
+
         </div>
 
 
         <!-- MESSAGE -->
 
         <label for="message">
-          message <span>optional</span>
+          message
+          <span>optional</span>
         </label>
 
         <textarea
@@ -98,6 +137,8 @@
           placeholder="say something..."
         ></textarea>
 
+
+        <!-- COUNTER -->
 
         <div class="counter">
 
@@ -112,10 +153,11 @@
         </div>
 
 
-        <!-- IMAGE -->
+        <!-- MESSAGE IMAGE -->
 
         <label for="image">
-          image <span>optional</span>
+          image
+          <span>optional</span>
         </label>
 
         <input
@@ -165,6 +207,8 @@
 
       </form>
 
+
+      <!-- RESULT -->
 
       <div
         id="result"
